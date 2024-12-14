@@ -25,6 +25,12 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+Создай файл .env и внести в него следующие строки:
+```
+SECRET_KEY=***************** - звезды поменять на рандомную комбинацию букв
+ALGORITHM=HS256
+```
+
 Выполнить миграции:
 
 ```
