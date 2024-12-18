@@ -9,6 +9,7 @@ from app.database import Base, database_url
 from app.users.models import User
 from app.chat.models import Message
 from os.path import dirname, abspath
+from app.UserTypes.models import UserType
 
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
