@@ -26,3 +26,9 @@ NoUserIdException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                   detail='Не найден ID пользователя')
 
 ForbiddenException = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Недостаточно прав!')
+
+NoUserTypeIdException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                  detail='Не найден тип пользователя')
+
+UserTypeAlreadyExistsException = HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                           detail='Тип пользователя уже существует')
