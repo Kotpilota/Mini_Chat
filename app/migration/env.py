@@ -10,6 +10,7 @@ from app.users.models import User
 from app.chat.models import Message
 from os.path import dirname, abspath
 from app.UserTypes.models import UserType
+from app.asassigned_tasks.models import Task, Status, Assigned_task
 
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
