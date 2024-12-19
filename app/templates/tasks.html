@@ -1,0 +1,185 @@
+<html><head><base href="." /><title>Drag & Drop Todo List</title>
+<style>
+:root {
+  --primary: #2196f3;
+  --dark: #1976d2;
+  --light: #bbdefb;
+  --grid-gap: 20px;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.todo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--grid-gap);
+  padding: var(--grid-gap);
+}
+
+.todo-column {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 300px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.column-header {
+  font-size: 1.2em;
+  color: var(--dark);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--light);
+}
+
+.todo-item {
+  background: white;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  cursor: move;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.todo-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.todo-item.dragging {
+  opacity: 0.5;
+  background: var(--light);
+}
+
+.add-todo {
+  width: 100%;
+  padding: 8px;
+  margin-top: 16px;
+  border: 2px solid var(--light);
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.add-todo:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.droppable-hover {
+  background: var(--light);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="todo-grid">
+    <div class="todo-column" data-column="todo">
+      <div class="column-header">To Do</div>
+      <div class="items-container">
+        <div class="todo-item" draggable="true">Design new landing page</div>
+        <div class="todo-item" draggable="true">Update user documentation</div>
+        <div class="todo-item" draggable="true">Fix navigation bugs</div>
+      </div>
+      <input type="text" class="add-todo" placeholder="Add new task...">
+    </div>
+    
+    <div class="todo-column" data-column="in-progress">
+      <div class="column-header">In Progress</div>
+      <div class="items-container">
+        <div class="todo-item" draggable="true">Implement authentication</div>
+        <div class="todo-item" draggable="true">Create API endpoints</div>
+      </div>
+      <input type="text" class="add-todo" placeholder="Add new task...">
+    </div>
+    
+    <div class="todo-column" data-column="done">
+      <div class="column-header">Done</div>
+      <div class="items-container">
+        <div class="todo-item" draggable="true">Setup project structure</div>
+        <div class="todo-item" draggable="true">Initial commit</div>
+      </div>
+      <input type="text" class="add-todo" placeholder="Add new task...">
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const todoItems = document.querySelectorAll('.todo-item');
+  const columns = document.querySelectorAll('.todo-column');
+  const addTodoInputs = document.querySelectorAll('.add-todo');
+  
+  let draggedItem = null;
+
+  // Setup drag and drop for existing items
+  todoItems.forEach(item => {
+    setupDragAndDrop(item);
+  });
+
+  function setupDragAndDrop(item) {
+    item.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      setTimeout(() => {
+        item.classList.add('dragging');
+      }, 0);
+    });
+
+    item.addEventListener('dragend', () => {
+      draggedItem.classList.remove('dragging');
+      draggedItem = null;
+    });
+  }
+
+  // Column drop zones
+  columns.forEach(column => {
+    column.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      column.classList.add('droppable-hover');
+    });
+
+    column.addEventListener('dragleave', () => {
+      column.classList.remove('droppable-hover');
+    });
+
+    column.addEventListener('drop', (e) => {
+      e.preventDefault();
+      column.classList.remove('droppable-hover');
+      const itemsContainer = column.querySelector('.items-container');
+      if (draggedItem) {
+        itemsContainer.appendChild(draggedItem);
+      }
+    });
+  });
+
+  // Add new todo items
+  addTodoInputs.forEach(input => {
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && input.value.trim() !== '') {
+        const newTodo = document.createElement('div');
+        newTodo.className = 'todo-item';
+        newTodo.draggable = true;
+        newTodo.textContent = input.value.trim();
+        
+        const itemsContainer = input.previousElementSibling;
+        itemsContainer.appendChild(newTodo);
+        
+        setupDragAndDrop(newTodo);
+        input.value = '';
+      }
+    });
+  });
+});
+</script>
+</body></html>

@@ -1,7 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Response
-from starlette import status
+from fastapi import APIRouter, Response, status
 
 from app.UserTypes.dao import UserTypeDAO
 from app.UserTypes.schemas import UserTypeRead, UserTypeCreate, UserTypeUpdate
@@ -27,18 +26,16 @@ async def get_usertypes():
     return user_types_all
 
 
-
-
 @router.post('/addUserType/')
 async def create_usertype(user_type: UserTypeCreate):
-    existing_usertype = await UserTypeDAO.find_one_or_none(usertype=user_type.usertype)
+    existing_usertype = await UserTypeDAO.find_one_or_none(
+        usertype=user_type.usertype)
     if existing_usertype:
         raise UserTypeAlreadyExistsException
 
     await UserTypeDAO.add(usertype=user_type.usertype)
 
     return {'message': 'ok'}
-
 
 
 @router.put("/updateUserType/{id}")

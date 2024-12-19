@@ -7,16 +7,18 @@ from app.exceptions import TokenExpiredException, TokenNoFoundException
 from app.users.router import router as users_router
 from app.chat.router import router as chat_router
 from app.UserTypes.router import router as UsersTypeRouter
-
+from app.tasassigned_tasks.router import router as tasks_router
 
 app = FastAPI()
 app.mount('/static', StaticFiles(directory='app/static'), name='static')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить запросы с любых источников. Можете ограничить список доменов
+    allow_origins=["*"],
+    # Разрешить запросы с любых источников. Можете ограничить список доменов
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы (GET, POST, PUT, DELETE и т.д.)
+    allow_methods=["*"],
+    # Разрешить все методы (GET, POST, PUT, DELETE и т.д.)
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
@@ -25,6 +27,8 @@ app.include_router(chat_router)
 
 app.include_router(UsersTypeRouter)
 
+app.include_router(tasks_router)
+
 
 @app.get("/")
 async def redirect_to_auth():
@@ -32,13 +36,15 @@ async def redirect_to_auth():
 
 
 @app.exception_handler(TokenExpiredException)
-async def token_expired_exception_handler(request: Request, exc: HTTPException):
+async def token_expired_exception_handler(request: Request,
+                                          exc: HTTPException):
     # Возвращаем редирект на страницу /auth
     return RedirectResponse(url="/auth")
 
 
 # Обработчик для TokenNoFound
 @app.exception_handler(TokenNoFoundException)
-async def token_no_found_exception_handler(request: Request, exc: HTTPException):
+async def token_no_found_exception_handler(request: Request,
+                                           exc: HTTPException):
     # Возвращаем редирект на страницу /auth
     return RedirectResponse(url="/auth")
