@@ -7,7 +7,7 @@ from app.exceptions import TokenExpiredException, TokenNoFoundException
 from app.users.router import router as users_router
 from app.chat.router import router as chat_router
 from app.UserTypes.router import router as UsersTypeRouter
-from app.asassigned_tasks.router import router as asassigned_tasks_router
+from app.assigned_tasks.router import router as asassigned_tasks_router
 from app.status.router import router as status_router
 from app.tasks.router import router as tasks_router
 

@@ -8,7 +8,6 @@ from app.users.dao import UsersDAO
 from app.users.dependencies import get_current_user
 from app.users.models import User
 import asyncio
-import logging
 
 
 router = APIRouter(prefix='/chat', tags=['Chat'])

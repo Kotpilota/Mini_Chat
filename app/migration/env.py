@@ -6,11 +6,13 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from app.database import Base, database_url
+from os.path import dirname, abspath
 from app.users.models import User
 from app.chat.models import Message
-from os.path import dirname, abspath
 from app.UserTypes.models import UserType
-from app.asassigned_tasks.models import Task, Status, Assigned_task
+from app.assigned_tasks.models import AssignedTask
+from app.tasks.models import Task
+from app.status.models import Status
 
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))

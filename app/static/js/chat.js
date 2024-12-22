@@ -21,6 +21,10 @@ async function logout() {
     }
 }
 
+async function ToDoList() {
+    window.location.href = '/assigned_tasks/';
+}
+
 // Функция выбора пользователя
 async function selectUser(userId, userName, event) {
     selectedUserId = userId;

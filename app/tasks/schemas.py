@@ -1,11 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class TaskCreate(BaseModel):
-    title: str = Field(...)
-    description: str = Field(...)
-
+    title: str
+    description: str
 
 class TaskUpdate(BaseModel):
-    title: str = Field(...)
-    description: str = Field(...)
+    title: str
+    description: str
