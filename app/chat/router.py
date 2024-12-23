@@ -9,7 +9,6 @@ from app.users.dependencies import get_current_user
 from app.users.models import User
 import asyncio
 
-
 router = APIRouter(prefix='/chat', tags=['Chat'])
 templates = Jinja2Templates(directory='app/templates')
 
@@ -29,14 +28,15 @@ async def get_messages(user_id: int, current_user: User = Depends(get_current_us
 @router.post('/messages', response_model=MessageCreate)
 async def send_message(message: MessageCreate, current_user: User = Depends(get_current_user)):
     await MessagesDAO.add(sender_id=current_user.id,
-                         content=message.content,
-                         recipient_id=message.recipient_id)
+                          content=message.content,
+                          recipient_id=message.recipient_id)
     message_data = {'sender_id': current_user.id,
                     'recipient_id': message.recipient_id,
                     'content': message.content}
     await notify_user(message.recipient_id, message_data)
     await notify_user(current_user.id, message_data)
-    return {'recipient_id': message.recipient_id, 'content': message.content, 'status': 'ok', 'msg': 'Message saved!'}
+    return {'recipient_id': message.recipient_id, 'content': message.content, 'status': 'ok',
+            'msg': 'Message saved!'}
 
 
 active_connections: Dict[int, WebSocket] = {}
@@ -57,4 +57,3 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
             await asyncio.sleep(1)
     except WebSocketDisconnect:
         active_connections.pop(user_id, None)
-

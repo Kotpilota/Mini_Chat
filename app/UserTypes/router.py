@@ -1,7 +1,7 @@
 from typing import List
 
-from fastapi import APIRouter, Response, status
-from pyexpat.errors import messages
+from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
 
 from app.UserTypes.dao import UserTypeDAO
 from app.UserTypes.schemas import UserTypeRead, UserTypeCreate, UserTypeUpdate
@@ -9,9 +9,16 @@ from app.exceptions import NoUserTypeIdException, \
     UserTypeAlreadyExistsException
 
 router = APIRouter(prefix='/usertype', tags=['UserType'])
+templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/usertypes/{usertype_id}', response_model=UserTypeRead, summary='Получить тип пользователя по ID')
+@router.get('/', summary='Страница UserType')
+async def get_user_types(request: Request):
+    return templates.TemplateResponse('usertype.html', {'request': request})
+
+
+@router.get('/type/{usertype_id}', response_model=UserTypeRead,
+            summary='Получить тип пользователя по ID')
 async def get_usertype(usertype_id: int):
     usertype = await UserTypeDAO.find_one_or_none(id=usertype_id)
 
@@ -21,22 +28,22 @@ async def get_usertype(usertype_id: int):
     return UserTypeRead(id=usertype.id, usertype=usertype.usertype)
 
 
-@router.get('/usertypes', response_model=List[UserTypeRead], summary='Получить все типы пользователя')
+@router.get('/list', response_model=List[UserTypeRead], summary='Получить все типы пользователя')
 async def get_usertypes():
     user_types_all = await UserTypeDAO.find_all()
     return user_types_all
 
 
-@router.post('/addUserType/', summary='Создать тип пользователя')
+@router.post('/addUserType', summary='Создать тип пользователя')
 async def create_usertype(user_type: UserTypeCreate):
     existing_usertype = await UserTypeDAO.find_one_or_none(
         usertype=user_type.usertype)
     if existing_usertype:
         raise UserTypeAlreadyExistsException
 
-    await UserTypeDAO.add(usertype=user_type.usertype)
+    new_user_type = await UserTypeDAO.add(usertype=user_type.usertype)
 
-    return {'message': 'Тип пользователя успешно добавлен'}
+    return {'usertype': new_user_type}
 
 
 @router.put("/updateUserType/{id}", summary='Отредактировать тип пользователя')
@@ -56,4 +63,3 @@ async def delete_user_type(usertype_id: int):
     if not user_type:
         raise NoUserTypeIdException()
     return {'message': 'Тип пользователя успешно удалён', 'deleted_user_type_id': usertype_id}
-

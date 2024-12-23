@@ -1,7 +1,6 @@
 from sqlalchemy import String, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from app.database import Base
-from app.assigned_tasks.models import AssignedTask
 
 class Status(Base):
     __tablename__ = 'statuses'

@@ -1,9 +1,12 @@
 from datetime import datetime
 
+from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.future import select
+
 from app.dao.base import BaseDAO
 from app.assigned_tasks.models import AssignedTask
+from app.database import get_db
 from app.tasks.dao import TaskDAO
-from app.status.dao import StatusDAO
 
 
 class AssignedTaskDAO(BaseDAO):
@@ -24,3 +27,12 @@ class AssignedTaskDAO(BaseDAO):
             deadline=deadline
         )
         return assigned_task
+
+    @staticmethod
+    async def find_all_with_related():
+        async for db_session in get_db():
+            result = await db_session.execute(
+                select(AssignedTask).options(selectinload(AssignedTask.task), selectinload(AssignedTask.status))
+            )
+            return result.scalars().all()
+

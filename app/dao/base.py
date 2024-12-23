@@ -106,27 +106,27 @@ class BaseDAO:
             return obj
 
 
-@classmethod
-async def update_status(cls, data_id: int, new_status: int):
-    """
-    Асинхронно обновляет статус для записи с указанным ID.
+    @classmethod
+    async def update_status(cls, data_id: int, new_status: int):
+        """
+        Асинхронно обновляет статус для записи с указанным ID.
 
-    Аргументы:
-        data_id: Идентификатор записи.
-        new_status: Новый статус для записи.
+        Аргументы:
+            data_id: Идентификатор записи.
+            new_status: Новый статус для записи.
 
-    Возвращает:
-        Обновлённый экземпляр модели.
-    """
-    async with async_session_maker() as session:
-        async with session.begin():
-            query = select(cls.model).filter_by(id=data_id)
-            result = await session.execute(query)
-            obj = result.scalar_one_or_none()
-            if obj is None:
-                return None
+        Возвращает:
+            Обновлённый экземпляр модели.
+        """
+        async with async_session_maker() as session:
+            async with session.begin():
+                query = select(cls.model).filter_by(id=data_id)
+                result = await session.execute(query)
+                obj = result.scalar_one_or_none()
+                if obj is None:
+                    return None
 
-            obj.status = new_status
-            session.add(obj)
-            await session.commit()
-            return obj
+                obj.status = new_status
+                session.add(obj)
+                await session.commit()
+                return obj
