@@ -4,7 +4,9 @@ async function getUserTypes() {
         headers: {"Accept": "application/json"}
     });
     if (response.ok === true) {
+
         const usertypes = await response.json();
+        alert(usertypes);
         const rows = document.querySelector("tbody");
         usertypes.forEach(usertype => rows.append(row(usertype)));
     }
@@ -40,10 +42,12 @@ async function createUserType(userType) {
     if (response.ok === true) {
         const usertype = await response.json();
         document.querySelector("tbody").append(row(usertype));
+        window.location.reload(true);
     } else {
         const error = await response.json();
         console.log(error.message);
     }
+
 }
 
 async function editUserType(userTypeId, userType) {
@@ -116,6 +120,7 @@ function row(usertype) {
 document.getElementById('resetBtn').addEventListener("click", () => reset());
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
+    alert("window.location.reload()");
     const id = document.getElementById("userTypeId").value;
     const usertype = document.getElementById("userType").value;
     if (id === "")
@@ -123,4 +128,8 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
     else
         await editUserType(id, usertype);
     reset();
+    window.location.reload();
+
 });
+
+getUserTypes();

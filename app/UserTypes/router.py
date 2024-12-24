@@ -1,15 +1,20 @@
 from typing import List
+import os
 
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
+from idna.idnadata import scripts
 
 from app.UserTypes.dao import UserTypeDAO
 from app.UserTypes.schemas import UserTypeRead, UserTypeCreate, UserTypeUpdate
 from app.exceptions import NoUserTypeIdException, \
     UserTypeAlreadyExistsException
 
+script_dir = os.path.dirname(__file__)
+templates_abs_path = os.path.join(script_dir, "../templates/")
+
 router = APIRouter(prefix='/usertype', tags=['UserType'])
-templates = Jinja2Templates(directory='app/templates')
+templates = Jinja2Templates(directory=templates_abs_path)
 
 
 @router.get('/', summary='Страница UserType')
@@ -30,8 +35,8 @@ async def get_usertype(usertype_id: int):
 
 @router.get('/list', response_model=List[UserTypeRead], summary='Получить все типы пользователя')
 async def get_usertypes():
-    user_types_all = await UserTypeDAO.find_all()
-    return user_types_all
+    usertypes = await UserTypeDAO.find_all()
+    return usertypes
 
 
 @router.post('/addUserType', summary='Создать тип пользователя')
@@ -41,9 +46,11 @@ async def create_usertype(user_type: UserTypeCreate):
     if existing_usertype:
         raise UserTypeAlreadyExistsException
 
-    new_user_type = await UserTypeDAO.add(usertype=user_type.usertype)
+    await UserTypeDAO.add(usertype=user_type.usertype)
 
-    return {'usertype': new_user_type}
+    new_user_type = await UserTypeDAO.find_one_or_none(usertype=user_type.usertype)
+
+    return new_user_type
 
 
 @router.put("/updateUserType/{id}", summary='Отредактировать тип пользователя')
@@ -54,7 +61,8 @@ async def update_user_type(id: int, user_type: UserTypeUpdate):
 
     await UserTypeDAO.update(db_user_type, user_type)
 
-    return {'message': 'Тип пользователя успешно отредактирован'}
+    updated_user_type = await UserTypeDAO.find_one_or_none(usertype=user_type.usertype)
+    return updated_user_type
 
 
 @router.delete("/deleteUserType/{usertype_id}", summary='Удалить тип пользователя')
@@ -62,4 +70,4 @@ async def delete_user_type(usertype_id: int):
     user_type = await UserTypeDAO.delete(usertype_id)
     if not user_type:
         raise NoUserTypeIdException()
-    return {'message': 'Тип пользователя успешно удалён', 'deleted_user_type_id': usertype_id}
+    return user_type

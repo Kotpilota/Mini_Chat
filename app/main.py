@@ -1,8 +1,11 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from app.exceptions import TokenExpiredException, TokenNoFoundException
 from app.users.router import router as users_router
 from app.chat.router import router as chat_router
@@ -11,8 +14,11 @@ from app.assigned_tasks.router import router as asassigned_tasks_router
 from app.status.router import router as status_router
 from app.tasks.router import router as tasks_router
 
+script_dir = os.path.dirname(__file__)
+static_abs_path = os.path.join(script_dir, "static/")
+
 app = FastAPI()
-app.mount('/static', StaticFiles(directory='app/static'), name='static')
+app.mount('/static', StaticFiles(directory=static_abs_path), name='static')
 
 app.add_middleware(
     CORSMiddleware,
