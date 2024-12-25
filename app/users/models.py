@@ -11,3 +11,4 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False)
     usertype: Mapped[int] = mapped_column(Integer, ForeignKey(UserType.id), nullable=False, server_default='1')
+

@@ -4,3 +4,4 @@ from app.UserTypes.models import UserType
 
 class UserTypeDAO(BaseDAO):
     model = UserType
+

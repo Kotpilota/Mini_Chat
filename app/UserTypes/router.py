@@ -3,7 +3,6 @@ import os
 
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from idna.idnadata import scripts
 
 from app.UserTypes.dao import UserTypeDAO
 from app.UserTypes.schemas import UserTypeRead, UserTypeCreate, UserTypeUpdate

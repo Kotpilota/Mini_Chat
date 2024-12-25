@@ -75,3 +75,12 @@ NoUserTypeIdException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
 
 UserTypeAlreadyExistsException = HTTPException(status_code=status.HTTP_409_CONFLICT,
                                            detail='Тип пользователя уже существует')
+
+NoAssignedTaskException = HTTPException(status_code=404,
+                                  detail="assigned_task doesn't exists!")
+
+AssignedTaskAlreadyExistsException = HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                  detail="Задача уже существует!")
+
+TaskAlreadyExistsException = HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                  detail="Задача уже существует!")

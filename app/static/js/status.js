@@ -1,26 +1,26 @@
-async function getUserTypes() {
-    const response = await fetch("/usertype/list", {
+async function getStatusList() {
+    const response = await fetch("/statuses/list", {
         method: "GET",
         headers: {"Accept": "application/json"}
     });
     if (response.ok === true) {
 
-        const usertypes = await response.json();
-        alert(usertypes);
+        const statuses = await response.json();
+        alert(statuses);
         const rows = document.querySelector("tbody");
-        usertypes.forEach(usertype => rows.append(row(usertype)));
+        statuses.forEach(statuss => rows.append(row(statuss)));
     }
 }
 
-async function getUserType(id) {
-    const response = await fetch(`/usertype/type/${id}`, {
+async function getStatus(id) {
+    const response = await fetch(`/statuses/status/${id}`, {
         method: "GET",
         headers: {"Accept": "application/json"}
     });
     if (response.ok === true) {
-        const usertype = await response.json();
-        document.getElementById("userTypeId").value = usertype.id;
-        document.getElementById("userType").value = usertype.usertype;
+        const statuss = await response.json();
+        document.getElementById("statusID").value = statuss.id;
+        document.getElementById("Status").value = statuss.title;
     } else {
         // если произошла ошибка, получаем сообщение об ошибке
         const error = await response.json();
@@ -28,20 +28,20 @@ async function getUserType(id) {
     }
 }
 
-async function createUserType(userType) {
-    const response = await fetch("/usertype/addUserType", {
+async function createStatus(Status) {
+    const response = await fetch("/statuses/addStatus", {
         method: "POST",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            usertype: userType
+            title: Status
         })
     });
     if (response.ok === true) {
-        const usertype = await response.json();
-        document.querySelector("tbody").append(row(usertype));
+        const status = await response.json();
+        document.querySelector("tbody").append(row(status));
     } else {
         const error = await response.json();
         console.log(error.message);
@@ -49,35 +49,35 @@ async function createUserType(userType) {
 
 }
 
-async function editUserType(userTypeId, userType) {
-    const response = await fetch(`/usertype/updateUserType/${userTypeId}`, {
+async function editStatus(statusID, Status) {
+    const response = await fetch(`/statuses/editStatus/${statusID}`, {
         method: "PUT",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            //id: userTypeId,
-            usertype: userType
+            //id: statusID,
+            title: Status
         })
     });
     if (response.ok === true) {
-        const usertype = await response.json();
-        document.querySelector(`tr[data-rowid='${usertype.id}']`).replaceWith(row(usertype));
+        const statuss = await response.json();
+        document.querySelector(`tr[data-rowid='${statuss.id}']`).replaceWith(row(statuss));
     } else {
         const error = await response.json();
         console.log(error.message);
     }
 }
 
-async function deleteUserType(id) {
-    const response = await fetch(`/usertype/deleteUserType/${id}`, {
+async function deleteStatus(id) {
+    const response = await fetch(`/statuses/deleteStatus/${id}`, {
         method: "DELETE",
         headers: {"Accept": "application/json"}
     });
     if (response.ok === true) {
-        const usertype = await response.json();
-        document.querySelector(`tr[data-rowid='${usertype.id}']`).remove();
+        const statuss = await response.json();
+        document.querySelector(`tr[data-rowid='${statuss.id}']`).remove();
     } else {
         const error = await response.json();
         console.log(error.message);
@@ -85,30 +85,30 @@ async function deleteUserType(id) {
 }
 
 function reset() {
-    document.getElementById("userTypeId").value = "";
-    document.getElementById("userType").value = "";
+    document.getElementById("statusID").value = "";
+    document.getElementById("Status").value = "";
 }
 
 
-function row(usertype) {
+function row(statuss) {
 
     const tr = document.createElement("tr");
-    tr.setAttribute("data-rowid", usertype.id);
+    tr.setAttribute("data-rowid", statuss.id);
 
-    const usertypeTd = document.createElement("td");
-    usertypeTd.append(usertype.usertype);
-    tr.append(usertypeTd);
+    const StatusTd = document.createElement("td");
+    StatusTd.append(statuss.title);
+    tr.append(StatusTd);
 
     const linksTd = document.createElement("td");
 
     const editLink = document.createElement("button");
     editLink.append("Изменить");
-    editLink.addEventListener("click", async () => await getUserType(usertype.id));
+    editLink.addEventListener("click", async () => await getStatus(statuss.id));
     linksTd.append(editLink);
 
     const removeLink = document.createElement("button");
     removeLink.append("Удалить");
-    removeLink.addEventListener("click", async () => await deleteUserType(usertype.id));
+    removeLink.addEventListener("click", async () => await deleteStatus(statuss.id));
 
     linksTd.append(removeLink);
     tr.appendChild(linksTd);
@@ -119,14 +119,13 @@ function row(usertype) {
 document.getElementById('resetBtn').addEventListener("click", () => reset());
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
-    alert("window.location.reload()");
-    const id = document.getElementById("userTypeId").value;
-    const usertype = document.getElementById("userType").value;
+    const id = document.getElementById("statusID").value;
+    const title = document.getElementById("Status").value;
     if (id === "")
-        await createUserType(usertype);
+        await createStatus(title);
     else
-        await editUserType(id, usertype);
+        await editStatus(id, title);
     reset();
 });
 
-getUserTypes();
+getStatusList();
