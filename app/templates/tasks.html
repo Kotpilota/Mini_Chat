@@ -1,55 +1,34 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <base href="."/>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Drag & Drop Todo List</title>
-  <link rel="stylesheet" href="/static/styles/tasks.css">
-</head>
-<body>
-<div class="container">
-  <div class="todo-flex">
-    {% for status in status_all %}
-      <div class="todo-column" data-column="{{ status.id }}">
-        <div class="column-header">{{ status.title }}</div>
+<html><head><base href="." /><title>Drag & Drop Todo List</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles/tasks.css">
+  </head>
+
+  <body>
+  <div class="container">
+    <div class="todo-grid">
+      <div class="todo-column" data-column="todo">
+        <div class="column-header">To Do</div>
         <div class="items-container">
-
+          <!-- Место для todo-item -->
         </div>
-
-        <form method="POST" action="/assigned_tasks/create"
-              class="form">
-          <div>
-            <input class="form-element" type="hidden" name="status_id"
-                   value="{{ status.id }}">
-          </div>
-          <div>
-            <input class="form-element" type="hidden" name="user_id"
-                   id="user_id"
-                   value="{{ user.id }}">
-          </div>
-          <div>
-            <input class="form-element" type="text" name="title"
-                   placeholder="Task title"
-                   required>
-          </div>
-          <div>
-                      <textarea class="form-element" name="description"
-                                placeholder="Task description"
-                                required></textarea>
-          </div>
-          <div>
-            <input class="form-element" type="datetime-local" name="deadline"
-                   required>
-          </div>
-          <button type="submit">Add Task</button>
-        </form>
+        <input type="text" class="add-todo" placeholder="Add new task...">
       </div>
-    {% endfor %}
-  </div>
-</div>
 
-<script src="/static/js/tasks.js"></script>
-</body>
-</html>
+      <div class="todo-column" data-column="in-progress">
+        <div class="column-header">In Progress</div>
+        <div class="items-container">
+          <!-- Место для todo-item -->
+        </div>
+        <input type="text" class="add-todo" placeholder="Add new task...">
+      </div>
+
+      <div class="todo-column" data-column="done">
+        <div class="column-header">Done</div>
+        <div class="items-container">
+          <!-- Место для todo-item -->
+        </div>
+        <input type="text" class="add-todo" placeholder="Add new task...">
+      </div>
+    </div>
+  </div>
+  <script src="../static/js/tasks.js"></script>
+  </body></html>

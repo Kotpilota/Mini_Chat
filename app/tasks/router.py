@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
 from app.tasks.dao import TaskDAO
-from app.tasks.schemas import TaskCreate, TaskUpdate
+from app.tasks.schemas import TasksCreate, TasksUpdate
 from app.exceptions import TaskNotFoundException, TaskCreationException
 
 script_dir = os.path.dirname(__file__)
@@ -35,7 +35,7 @@ async def get_task_by_id(task_id: int):
 
 
 @router.post("/addTask", summary="Создать новую задачу")
-async def create_task(task: TaskCreate):
+async def create_task(task: TasksCreate):
     try:
         await TaskDAO.add(title=task.title, description=task.description)
         new_task = await TaskDAO.find_one_or_none(title=task.title, description=task.description)
@@ -45,7 +45,7 @@ async def create_task(task: TaskCreate):
 
 
 @router.put("/editTask/{task_id}", summary="Обновить задачу по ID")
-async def update_task(task_id: int, task: TaskUpdate):
+async def update_task(task_id: int, task: TasksUpdate):
     task_to_update = await TaskDAO.find_one_or_none_by_id(task_id)
     if not task_to_update:
         raise TaskNotFoundException()

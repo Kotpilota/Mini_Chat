@@ -48,17 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ usertype: parseInt(newUserType) })
+                    body: JSON.stringify({usertype: parseInt(newUserType)})
                 });
-
-                if (response.ok) {
-                    alert("User updated successfully");
-                } else {
-                    alert("Failed to update user");
-                }
             });
         });
     }
-
     fetchUsers();
 });

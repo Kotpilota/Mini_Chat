@@ -22,7 +22,7 @@ async def get_categories(request: Request):
     return templates.TemplateResponse('auth.html', {'request': request})
 
 
-@router.get('/users', response_model=list[SUserRead])
+@router.get('/users')
 async def get_users():
     users_all = await UsersDAO.find_all()
     return [{'id': user.id, 'name': user.name} for user in users_all]
@@ -78,4 +78,3 @@ async def update_user_type(user_id: int, data: UserUpdateType):
         raise NoUserTypeIdException
 
     await UsersDAO.update(user, {"usertype": data.usertype})
-    return {"message": "User type updated successfully"}

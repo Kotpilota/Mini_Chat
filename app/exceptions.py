@@ -84,3 +84,9 @@ AssignedTaskAlreadyExistsException = HTTPException(status_code=status.HTTP_409_C
 
 TaskAlreadyExistsException = HTTPException(status_code=status.HTTP_409_CONFLICT,
                                   detail="Задача уже существует!")
+
+NoAssignedTaskExeption = HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Задание уже задано")
+
+
+TaskAlreadyExistsExeption = HTTPException(status_code=status.HTTP_409_CONFLICT,
+                                          detail="Задание уже существует")

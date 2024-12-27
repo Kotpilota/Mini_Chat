@@ -1,10 +1,20 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
-class TaskCreate(BaseModel):
-    title: str
-    description: str
+class TasksRead(BaseModel):
+    id: int = Field(..., description='Индф пользователя')
+    title: str = Field(..., min_length=1, max_length=50)
+    description: str = Field(..., )
 
-class TaskUpdate(BaseModel):
-    title: str
-    description: str
+    class Config:
+        orm_mode = True
+
+
+class TasksCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=50)
+    description: str = Field(..., )
+
+
+class TasksUpdate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=50)
+    description: str = Field(..., )
